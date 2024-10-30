@@ -1,13 +1,17 @@
 // General Express.js setup
-import express from "express";
-import bodyParser from "body-parser";
+import express, { Request, Response } from "express";
 import cors from "cors";
+import testRoute from "./routes/testRoute";
 
 const app = express();
-app.use(bodyParser.json());
+app.use(express.json());
+
 app.use(cors());
 
-app.get("/", (req, res) => {
+// Use routes
+app.use("/test", testRoute);
+
+app.get("/", (req: Request, res: Response) => {
   res.send("Hello World!");
 });
 
