@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { testSchema } from "../validators/test";
+import { testSchema } from "../validators/testSchema";
 
 const router = express.Router();
 
