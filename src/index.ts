@@ -1,20 +1,25 @@
-// General Express.js setup
 import express, { Request, Response } from "express";
 import cors from "cors";
-import testRoute from "./routes/testRoute";
-import { main } from "./database/prismaClient";
+import kategorijeRoute from "./kategorije/kategorijeRoute";
+import { errorHandler } from "./middleware/errorHandler";
 
 const app = express();
+
 app.use(express.json());
 app.use(cors());
 
 // Use routes
-app.use("/test", testRoute);
-
+app.use("/kategorije", kategorijeRoute);
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello World!");
 });
 
-app.listen(3000, () => {
-  console.log("Server is running on http://localhost:3000");
+// Centralized Error Handling Middleware
+// How to use:
+// In any route, if you want to pass an error to this middleware, call next(err)
+app.use(errorHandler);
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port http://localhost:${PORT}`);
 });

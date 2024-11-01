@@ -27,7 +27,7 @@ model Kategorije {
   nazivId  String   
   parentId String?
   drzavaId String?
-  isDead     Boolean  @default(false)
+  isDead   Boolean  @default(false)
   opis     String?
   count    Int      @default(0)
 }
