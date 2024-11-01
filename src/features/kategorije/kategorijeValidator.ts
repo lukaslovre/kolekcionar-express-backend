@@ -12,3 +12,6 @@ export const kategorijeSchema = z.object({
 
 // Use the Zod ability to remove properties from the schema
 export const kategorijeSchemaCreate = kategorijeSchema.omit({ id: true });
+
+// Infer types
+export type Kategorije = z.infer<typeof kategorijeSchema>;

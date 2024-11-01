@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
-import kategorijeRoute from "./kategorije/kategorijeRoute";
+import kategorijeRoute from "./features/kategorije/kategorijeRoute";
 import { errorHandler } from "./middleware/errorHandler";
 
 const app = express();

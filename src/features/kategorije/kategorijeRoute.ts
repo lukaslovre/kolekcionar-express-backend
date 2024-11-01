@@ -1,7 +1,7 @@
 import express, { NextFunction, Request, Response } from "express";
-import { prisma } from "../database/prismaClient";
+import { prisma } from "../../database/prismaClient";
 import { kategorijeSchema, kategorijeSchemaCreate } from "./kategorijeValidator";
-import { validateBody } from "../middleware/validateMiddleware";
+import { validateBody } from "../../middleware/validateMiddleware";
 import { z } from "zod";
 
 const router = express.Router();
@@ -52,6 +52,10 @@ router.get("/id/:id", async (req: Request, res: Response, next: NextFunction) =>
   } catch (err) {
     next(err);
   }
+});
+
+router.get("/root", async (req: Request, res: Response, next: NextFunction) => {
+  res.send("Root");
 });
 
 router.post(
