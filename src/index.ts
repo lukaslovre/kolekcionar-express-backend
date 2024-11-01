@@ -2,6 +2,7 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
 import testRoute from "./routes/testRoute";
+import { main } from "./database/prismaClient";
 
 const app = express();
 app.use(express.json());

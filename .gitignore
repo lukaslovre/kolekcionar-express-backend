@@ -5,3 +5,7 @@ npm-debug.log
 .idea
 .vscode
 .env
+
+# For Prisma ORM using SQLite
+*.db
+*.db-*

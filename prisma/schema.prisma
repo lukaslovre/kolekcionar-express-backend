@@ -4,11 +4,72 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
+// UPUTE:
+// Every time you change the database schema in your schema.prisma file, you need to follow these steps:
+// 
+// 1. Create a new migration: This will generate a new migration file based on the changes you made to the schema. Run the following command:
+//     `npx prisma migrate dev --name <migration_name>`
+// 
+// 2. Generate the Prisma Client: This will update the Prisma Client to reflect the changes in your schema. Run the following command:
+//     `npx prisma generate`
+
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:../database.db"
 }
+
+model Kategorije {
+  id       String   @id @default(uuid())
+  nazivId  String   
+  parentId String?
+  drzavaId String?
+  isDead     Boolean  @default(false)
+  opis     String?
+  count    Int      @default(0)
+}
+
+// model Item {
+//   id               String    @id @default(uuid())
+//   cijena           Decimal   @db.Decimal(10, 2)
+//   limit            Int       @default(1)
+//   nazivId          String    @default("")
+//   kategorijaId     String
+//   kategorijaPut    Int[]
+//   opis             String    @default("")
+//   sifra            Int       @default(autoincrement())
+//   groupId          String?
+//   groupValue       String?
+//   tagIds           String[]?
+//   imageUrls        String[]  @default([])
+//   vrijemeDodavanja DateTime  @default(now())
+//   tip              Tip       @default(ostalo)
+//   drzavaId         String?
+//   nominala         Float?
+//   valuta           String?
+//   godina           Int?
+//   kralj            String?
+//   mintage          Int?
+//   materijal        String?
+//   promjer          Float?
+//   masa             Float?
+//   kvaliteta        String?
+//   pick             String?
+//   serija           String?
+//   naselje          String?
+//   vrstraKamena     String?
+//   visina           Float?
+//   sirina           Float?
+//   duljina          Float?
+// }
+
+// enum Tip {
+//   kovanica
+//   novcanica
+//   razglednica
+//   kamen
+//   ostalo
+// }
