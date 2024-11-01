@@ -15,7 +15,6 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 // Centralized Error Handling Middleware
-// How to use:
 // In any route, if you want to pass an error to this middleware, call next(err)
 app.use(errorHandler);
 
@@ -23,3 +22,6 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port http://localhost:${PORT}`);
 });
+
+// Dogovori:
+// uvijek vraćati odgovor kao json (res.json())

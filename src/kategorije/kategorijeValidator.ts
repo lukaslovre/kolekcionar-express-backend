@@ -1,16 +1,7 @@
 import { z } from "zod";
 
-// model Kategorije {
-//     id       String   @id @default(uuid())
-//     nazivId  String
-//     parentId String?
-//     drzavaId String?
-//     isDead     Boolean  @default(false)
-//     opis     String?
-//     count    Int      @default(0)
-//   }
-
 export const kategorijeSchema = z.object({
+  id: z.string().uuid(),
   nazivId: z.string(),
   parentId: z.string().uuid().optional(),
   drzavaId: z.string().optional(),
@@ -18,3 +9,6 @@ export const kategorijeSchema = z.object({
   opis: z.string().optional(),
   count: z.number().int().optional(),
 });
+
+// Use the Zod ability to remove properties from the schema
+export const kategorijeSchemaCreate = kategorijeSchema.omit({ id: true });
