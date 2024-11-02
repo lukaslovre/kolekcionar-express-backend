@@ -30,6 +30,8 @@ model Kategorije {
   isDead   Boolean  @default(false)
   opis     String?
   count    Int      @default(0)
+  @@index([parentId], name: "parentId")
+  // Does SQLite automatically create an index for the primary key? A: Yes
 }
 
 // model Item {

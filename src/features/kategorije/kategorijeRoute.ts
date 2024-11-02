@@ -3,6 +3,8 @@ import { prisma } from "../../database/prismaClient";
 import { kategorijeSchema, kategorijeSchemaCreate } from "./kategorijeValidator";
 import { validateBody } from "../../middleware/validateMiddleware";
 import { z } from "zod";
+import type { Kategorije } from "./kategorijeValidator";
+import { getCategoriesTreeFromDb } from "./utils/sqlCategoryTreeUtils";
 
 const router = express.Router();
 
@@ -54,8 +56,55 @@ router.get("/id/:id", async (req: Request, res: Response, next: NextFunction) =>
   }
 });
 
-router.get("/root", async (req: Request, res: Response, next: NextFunction) => {
-  res.send("Root");
+// Tree structure
+router.get("/treeFrom/root", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const rootCategory = await prisma.kategorije.findFirst({
+      where: {
+        parentId: null,
+      },
+    });
+
+    if (!rootCategory) {
+      throw new Error("Root category not found");
+    }
+
+    const { selectedCategory, parents, siblings, children } =
+      await getCategoriesTreeFromDb(rootCategory.id);
+
+    res.json({
+      message: "Category tree",
+      data: {
+        selectedCategory,
+        parents,
+        siblings,
+        children,
+      },
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get("/treeFrom/:id", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const id = z.string().uuid().parse(req.params.id);
+
+    const { selectedCategory, parents, siblings, children } =
+      await getCategoriesTreeFromDb(id);
+
+    res.json({
+      message: "Category tree",
+      data: {
+        selectedCategory,
+        parents,
+        siblings,
+        children,
+      },
+    });
+  } catch (err) {
+    next(err);
+  }
 });
 
 router.post(
