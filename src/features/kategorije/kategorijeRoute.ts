@@ -63,6 +63,21 @@ router.post(
   validateBody(kategorijeSchemaCreate), // req.body now has a validated object
   async (req: Request, res: Response, next: NextFunction) => {
     try {
+      const parentId: string | undefined = req.body.parentId;
+
+      // If parentId is provided, check that the id exists in the database
+      if (parentId) {
+        const parentIdIsExistingCategoryId = await prisma.kategorije.count({
+          where: {
+            id: parentId,
+          },
+        });
+
+        if (!parentIdIsExistingCategoryId) {
+          return next(new Error("Parent category does not exist"));
+        }
+      }
+
       const newCategory = await prisma.kategorije.create({
         data: req.body,
       });
@@ -94,4 +109,29 @@ router.put(
   }
 );
 
+// Clear table
+router.get("/deleteAll", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    await prisma.kategorije.deleteMany();
+    res.json({ message: "All categories deleted" });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.delete("/id/:id", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const id = z.string().uuid().parse(req.params.id);
+
+    await prisma.kategorije.delete({
+      where: {
+        id: id,
+      },
+    });
+
+    res.json({ message: "Category deleted" });
+  } catch (err) {
+    next(err);
+  }
+});
 export default router;
