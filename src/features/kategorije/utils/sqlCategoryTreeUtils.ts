@@ -46,8 +46,12 @@ async function getAllParents(categoryId: string) {
     WHERE id != ${categoryId}
     ORDER BY level DESC;`;
 
+  // Invert the levels so that the top level is 0
+
+  const maxLevel = Math.max(...parents.map((p) => Number(p.level)), 0);
+
   const parentsParsed = parents.map((p) => {
-    return { ...p, level: Number(p.level) };
+    return { ...p, level: maxLevel - Number(p.level) };
   });
 
   return parentsParsed;

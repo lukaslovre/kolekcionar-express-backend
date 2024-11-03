@@ -5,8 +5,8 @@ import { errorHandler } from "./middleware/errorHandler";
 
 const app = express();
 
-app.use(express.json());
 app.use(cors());
+app.use(express.json());
 
 // Use routes
 app.use("/kategorije", kategorijeRoute);
