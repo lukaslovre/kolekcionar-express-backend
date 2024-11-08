@@ -1,7 +1,8 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
-import kategorijeRoute from "./features/kategorije/kategorijeRoute";
 import { errorHandler } from "./middleware/errorHandler";
+import kategorijeRoute from "./features/kategorije/kategorijeRoute";
+import itemRoute from "./features/item/itemRoute";
 
 const app = express();
 
@@ -10,6 +11,7 @@ app.use(express.json());
 
 // Use routes
 app.use("/kategorije", kategorijeRoute);
+app.use("/item", itemRoute);
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello World!");
 });

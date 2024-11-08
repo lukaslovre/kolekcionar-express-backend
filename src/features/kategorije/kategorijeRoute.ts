@@ -3,7 +3,6 @@ import { prisma } from "../../database/prismaClient";
 import { kategorijeSchema, kategorijeSchemaCreate } from "./kategorijeValidator";
 import { validateBody } from "../../middleware/validateMiddleware";
 import { z } from "zod";
-import type { Kategorije } from "./kategorijeValidator";
 import { getCategoriesTreeFromDb } from "./utils/sqlCategoryTreeUtils";
 
 const router = express.Router();
@@ -183,4 +182,5 @@ router.delete("/id/:id", async (req: Request, res: Response, next: NextFunction)
     next(err);
   }
 });
+
 export default router;

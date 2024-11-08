@@ -34,39 +34,55 @@ model Kategorije {
   // Does SQLite automatically create an index for the primary key? A: Yes
 }
 
-// model Item {
-//   id               String    @id @default(uuid())
-//   cijena           Decimal   @db.Decimal(10, 2)
-//   limit            Int       @default(1)
-//   nazivId          String    @default("")
-//   kategorijaId     String
-//   kategorijaPut    Int[]
-//   opis             String    @default("")
-//   sifra            Int       @default(autoincrement())
-//   groupId          String?
-//   groupValue       String?
-//   tagIds           String[]?
-//   imageUrls        String[]  @default([])
-//   vrijemeDodavanja DateTime  @default(now())
-//   tip              Tip       @default(ostalo)
-//   drzavaId         String?
-//   nominala         Float?
-//   valuta           String?
-//   godina           Int?
-//   kralj            String?
-//   mintage          Int?
-//   materijal        String?
-//   promjer          Float?
-//   masa             Float?
-//   kvaliteta        String?
-//   pick             String?
-//   serija           String?
-//   naselje          String?
-//   vrstraKamena     String?
-//   visina           Float?
-//   sirina           Float?
-//   duljina          Float?
-// }
+
+
+model Item {
+  id               Int       @id @default(autoincrement()) // Testiram autoincrement radi lakšeg referenciranja na proizvod
+  cijena           Float
+  limit            Int       @default(1)
+  nazivId          String
+  kategorijaId     String
+  // kategorijaPut    Int[]
+  opis             String?    
+  // sifra            Int       @default(autoincrement())
+  // groupId          String?
+  // groupValue       String?
+  tags             Tag[]
+  images           Image[]
+  vrijemeDodavanja DateTime  @default(now())
+  tip              String    @default("ostalo") // kovanica, novcanica, razglednica, kamen, ostalo (SQLITE nema ENUM)
+  // drzavaId         String?
+  nominala         Float?
+  valuta           String?
+  godina           Int?
+  kralj            String?
+  mintage          Int?
+  materijal        String?
+  promjer          Float?
+  masa             Float?
+  kvaliteta        String?
+  pick             String?
+  serija           String?
+  naselje          String?
+  vrstaKamena      String?
+  visina           Float?
+  sirina           Float?
+  duljina          Float?
+
+}
+
+model Tag {
+  id    String @id @default(uuid())
+  naziv String
+  items Item[] // Many-to-Many relation
+}
+
+model Image {
+  id        String  @id @default(uuid())
+  url       String
+  itemId    Int     // Foreign key
+  item      Item    @relation(fields: [itemId], references: [id]) // One-to-Many relation
+}
 
 // enum Tip {
 //   kovanica
