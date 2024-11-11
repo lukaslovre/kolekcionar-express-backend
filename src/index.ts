@@ -3,6 +3,7 @@ import cors from "cors";
 import { errorHandler } from "./middleware/errorHandler";
 import kategorijeRoute from "./features/kategorije/kategorijeRoute";
 import itemRoute from "./features/item/itemRoute";
+import tagRoute from "./features/tag/tagRoute";
 
 const app = express();
 
@@ -12,8 +13,13 @@ app.use(express.json());
 // Use routes
 app.use("/kategorije", kategorijeRoute);
 app.use("/item", itemRoute);
-app.get("/", (req: Request, res: Response) => {
-  res.send("Hello World!");
+app.use("/tag", tagRoute);
+
+// Test route
+app.get("/health", (req: Request, res: Response) => {
+  res.json({
+    message: "Server is running",
+  });
 });
 
 // Centralized Error Handling Middleware
