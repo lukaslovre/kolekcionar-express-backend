@@ -1,9 +1,9 @@
 import { z } from "zod";
 
-const imageSchema = z.object({
-  id: z.string().uuid(),
-  url: z.string().optional(),
-});
+// const imageSchema = z.object({
+//   id: z.string().uuid(),
+//   url: z.string().optional(),
+// });
 
 export const itemSchema = z.object({
   id: z.number(),
@@ -13,7 +13,7 @@ export const itemSchema = z.object({
   kategorijaId: z.string().uuid(),
   opis: z.string().optional(),
   tags: z.array(z.string()),
-  images: z.array(imageSchema),
+  images: z.array(z.string()),
   vrijemeDodavanja: z.date(), // How does Zod handle dates? Does it have to be a Date object, or can it be a valid string? Answer: It can be a valid string.
   tip: z.string(),
   nominala: z.number().optional(),

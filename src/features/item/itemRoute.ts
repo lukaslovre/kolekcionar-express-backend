@@ -54,14 +54,32 @@ router.post(
   "/",
   validateBody(itemSchemaCreate),
   async (req: Request, res: Response, next: NextFunction) => {
-    // Treba provjerit jesu li poslani images i tags.
-    // Prisma ima opcije .create .connect .disconnect .set
-
-    // Ovo nije gotovo, treba vidjet kako funkcioniraju ovi relational polja
+    const formData = req.body as z.infer<typeof itemSchemaCreate>;
 
     try {
+      // Build base data object without relations
+      const createData: any = {
+        ...formData,
+      };
+
+      delete createData.tags;
+      delete createData.images;
+
+      if (formData.tags && formData.tags.length > 0) {
+        createData.tags = {
+          connect: formData.tags.map((tag) => ({ id: tag })),
+        };
+      }
+
+      if (formData.images && formData.images.length > 0) {
+        createData.images = {
+          create: formData.images.map((image) => ({ url: image })),
+        };
+      }
+
       const newItem = await prisma.item.create({
-        data: req.body,
+        data: createData,
+        include: { tags: true, images: true },
       });
 
       res.status(201).json({ message: "Item created", data: newItem });
