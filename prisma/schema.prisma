@@ -70,7 +70,7 @@ model Item {
   visina           Float?
   sirina           Float?
   duljina          Float?
-
+  @@index([kategorijaId], name: "kategorijaId")
 }
 
 model Tag {

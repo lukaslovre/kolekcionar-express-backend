@@ -3,6 +3,7 @@ import { prisma } from "../../database/prismaClient";
 import { z } from "zod";
 import { validateBody } from "../../middleware/validateMiddleware";
 import { itemSchemaCreate } from "./itemValidator";
+import { getAllCategoryDescendants } from "../kategorije/utils/sqlCategoryTreeUtils";
 
 const router = express.Router();
 
@@ -53,6 +54,36 @@ router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
     next(error);
   }
 });
+
+router.get(
+  "/underCategory/:categoryId",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const categoryId = z.string().uuid().parse(req.params.categoryId);
+
+      const allCategoriesUnderSelected = await getAllCategoryDescendants(categoryId);
+
+      const categoryIds = [categoryId, ...allCategoriesUnderSelected.map((c) => c.id)];
+
+      const items = await prisma.item.findMany({
+        where: {
+          kategorijaId: { in: categoryIds },
+        },
+        include: {
+          tags: true,
+          images: true,
+        },
+      });
+
+      res.json({
+        message: "Items under category",
+        data: items,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 router.post(
   "/",

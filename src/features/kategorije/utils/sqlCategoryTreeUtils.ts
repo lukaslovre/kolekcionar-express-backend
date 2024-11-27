@@ -4,7 +4,9 @@ import { Kategorije } from "../kategorijeValidator";
 // Level is depth from the selected category. TotalItems is the number of items below the category
 type CategoryWithLevel = Kategorije & { level: number; totalItems?: number };
 
-async function getAllCategoryDescendants(categoryId: string): Promise<Kategorije[]> {
+export async function getAllCategoryDescendants(
+  categoryId: string
+): Promise<Kategorije[]> {
   const descendants = await prisma.$queryRaw<Kategorije[]>`
     WITH RECURSIVE Descendants AS (
       SELECT *
