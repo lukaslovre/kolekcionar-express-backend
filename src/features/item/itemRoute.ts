@@ -36,6 +36,9 @@ router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
 
     if (!id) throw new Error("Id is required parameter");
 
+    // Parse id to number and see that its not NaN
+    if (isNaN(Number(id))) throw new Error("Id must be a number");
+
     const item = await prisma.item.findUnique({
       where: {
         id: Number(id),
