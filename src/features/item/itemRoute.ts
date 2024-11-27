@@ -39,6 +39,10 @@ router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
       where: {
         id: Number(id),
       },
+      include: {
+        images: true,
+        tags: true,
+      },
     });
 
     res.json({
