@@ -52,7 +52,8 @@ model Item {
   images           Image[]
   vrijemeDodavanja DateTime   @default(now())
   tip              String     @default("ostalo") // kovanica, novcanica, razglednica, kamen, ostalo (SQLITE nema ENUM)
-  // drzavaId         String?
+  countryId        String?
+  country          Country?   @relation(fields: [countryId], references: [id])
   nominala         Float?
   valuta           String?
   godina           Int?
@@ -91,6 +92,13 @@ model Group {
   name    String
   purpose String?
   items   Item[]
+}
+
+model Country {
+  id    String @id @default(uuid())
+  name  String
+  code  String
+  items Item[]
 }
 
 // enum Tip {
