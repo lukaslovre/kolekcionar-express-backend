@@ -35,13 +35,12 @@ export const itemSchema = z.object({
 });
 
 // The extended fields are the ones that have a default value
-export const itemSchemaCreate = itemSchema.omit({ id: true }).extend({
-  limit: z.number().int().positive().optional(),
-  vrijemeDodavanja: z.date().optional(),
-  tip: z.string().optional(),
-
-  tags: z.array(z.string()).optional(),
-  images: z.array(z.string()).optional(),
+export const itemSchemaCreate = itemSchema.omit({ id: true }).partial({
+  limit: true,
+  vrijemeDodavanja: true,
+  tip: true,
+  tags: true,
+  images: true,
 });
 
 export type Item = z.infer<typeof itemSchema>;

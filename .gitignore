@@ -9,3 +9,5 @@ npm-debug.log
 # For Prisma ORM using SQLite
 *.db
 *.db-*
+
+*.csv
