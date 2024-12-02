@@ -23,36 +23,35 @@ datasource db {
 }
 
 model Kategorije {
-  id       String   @id @default(uuid())
-  nazivId  String   
+  id       String  @id @default(uuid())
+  nazivId  String
   parentId String?
   drzavaId String?
-  isDead   Boolean  @default(false)
+  isDead   Boolean @default(false)
   opis     String?
-  count    Int      @default(0)
+  count    Int     @default(0)
   items    Item[]
-  @@index([parentId], name: "parentId")
   // Does SQLite automatically create an index for the primary key? A: Yes
+
+  @@index([parentId], name: "parentId")
 }
 
-
-
 model Item {
-  id               Int       @id @default(autoincrement()) // Testiram autoincrement radi lakšeg referenciranja na proizvod
+  id               Int        @id @default(autoincrement()) // Testiram autoincrement radi lakšeg referenciranja na proizvod
   cijena           Float
-  limit            Int       @default(1)
+  limit            Int        @default(1)
   nazivId          String
   kategorijaId     String
   kategorija       Kategorije @relation(fields: [kategorijaId], references: [id])
   // kategorijaPut    Int[]
-  opis             String?    
+  opis             String?
   // sifra            Int       @default(autoincrement())
-  // groupId          String?
-  // groupValue       String?
+  groupId          String?
+  group            Group?     @relation(fields: [groupId], references: [id])
   tags             Tag[]
   images           Image[]
-  vrijemeDodavanja DateTime  @default(now())
-  tip              String    @default("ostalo") // kovanica, novcanica, razglednica, kamen, ostalo (SQLITE nema ENUM)
+  vrijemeDodavanja DateTime   @default(now())
+  tip              String     @default("ostalo") // kovanica, novcanica, razglednica, kamen, ostalo (SQLITE nema ENUM)
   // drzavaId         String?
   nominala         Float?
   valuta           String?
@@ -70,6 +69,7 @@ model Item {
   visina           Float?
   sirina           Float?
   duljina          Float?
+
   @@index([kategorijaId], name: "kategorijaId")
 }
 
@@ -80,10 +80,17 @@ model Tag {
 }
 
 model Image {
-  id        String  @id @default(uuid())
-  url       String
-  itemId    Int     // Foreign key
-  item      Item    @relation(fields: [itemId], references: [id]) // One-to-Many relation
+  id     String @id @default(uuid())
+  url    String
+  itemId Int // Foreign key
+  item   Item   @relation(fields: [itemId], references: [id]) // One-to-Many relation
+}
+
+model Group {
+  id      String  @id @default(uuid())
+  name    String
+  purpose String?
+  items   Item[]
 }
 
 // enum Tip {
