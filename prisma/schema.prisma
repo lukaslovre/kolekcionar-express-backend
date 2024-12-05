@@ -55,18 +55,18 @@ model Item {
   countryId        String?
   country          Country?   @relation(fields: [countryId], references: [id])
   nominala         Float?
-  valuta           String?
+  // valuta           String?
   godina           Int?
-  kralj            String?
+  // kralj            String?
   mintage          Int?
-  materijal        String?
-  promjer          Float?
+  // materijal        String?
+  promjer          Float? // ako samo jedno
   masa             Float?
-  kvaliteta        String?
-  pick             String?
-  serija           String?
-  naselje          String?
-  vrstaKamena      String?
+  // kvaliteta        String?
+  // pick             String?
+  // serija           String?
+  // naselje          String?
+  // vrstaKamena      String?
   visina           Float?
   sirina           Float?
   duljina          Float?
@@ -75,9 +75,13 @@ model Item {
 }
 
 model Tag {
-  id    String @id @default(uuid())
-  naziv String
-  items Item[] // Many-to-Many relation
+  id               String  @id @default(uuid())
+  naziv            String
+  group            String
+  displayOnCard    Boolean @default(true)
+  displayOnDetails Boolean @default(true)
+  description      String?
+  items            Item[] // Many-to-Many relation
 }
 
 model Image {

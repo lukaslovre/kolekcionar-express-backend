@@ -8,12 +8,14 @@ import z, { ZodError } from "zod";
 
 // TASK FOR COPILOT: Genearte typescript type based on the comment above (everything is a string because of loading from CSV)
 
+// slike povuč
+
 const OldItemStructureSchema = z.object({
   ID: z.string(),
   Vrsta: z.string(),
   SKU: z.string(),
   Naziv: z.string(),
-  Objavljeno: z.string(),
+  Objavljeno: z.string(), // pazi
   "Istaknuto?": z.string(),
   "Vidljivost u katalogu": z.string(),
   "Kratak opis": z.string(),
@@ -72,10 +74,14 @@ type OldItemStructure = z.infer<typeof OldItemStructureSchema>;
 let validRecords: OldItemStructure[] = [];
 
 if (Array.isArray(records)) {
+  let currentRecord: OldItemStructure;
+
   records.forEach((record) => {
     try {
-      OldItemStructureSchema.parse(record);
-      validRecords.push(record);
+      currentRecord = OldItemStructureSchema.parse(record);
+      if (currentRecord["Objavljeno"] === "1") {
+        validRecords.push(record);
+      }
     } catch (error) {
       if (error instanceof ZodError) {
         console.log(error.errors);
