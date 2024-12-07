@@ -20,7 +20,9 @@ const router = express.Router();
 
 router.get("/", async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const items = await prisma.item.findMany({ include: { tags: true, images: true } });
+    const items = await prisma.item.findMany({
+      include: { tags: true, images: true },
+    });
     res.json({
       message: "All items",
       data: items,
@@ -75,6 +77,9 @@ router.get(
         include: {
           tags: true,
           images: true,
+        },
+        orderBy: {
+          vrijemeDodavanja: "desc",
         },
       });
 

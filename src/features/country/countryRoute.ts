@@ -7,7 +7,11 @@ router.get("/", async (req: Request, res: Response, next: NextFunction) => {
   try {
     console.log("All countries");
 
-    const countries = await prisma.country.findMany();
+    const countries = await prisma.country.findMany({
+      orderBy: {
+        name: "asc",
+      },
+    });
 
     res.json({
       message: "All countries",
