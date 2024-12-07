@@ -4,6 +4,7 @@ import { errorHandler } from "./middleware/errorHandler";
 import kategorijeRoute from "./features/kategorije/kategorijeRoute";
 import itemRoute from "./features/item/itemRoute";
 import tagRoute from "./features/tag/tagRoute";
+import countryRoute from "./features/country/countryRoute";
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use(express.json());
 app.use("/kategorije", kategorijeRoute);
 app.use("/item", itemRoute);
 app.use("/tag", tagRoute);
+app.use("/country", countryRoute);
 
 // Test route
 app.get("/health", (req: Request, res: Response) => {
