@@ -1,21 +1,28 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
+import path from "path";
 import { errorHandler } from "./middleware/errorHandler";
 import kategorijeRoute from "./features/kategorije/kategorijeRoute";
 import itemRoute from "./features/item/itemRoute";
 import tagRoute from "./features/tag/tagRoute";
 import countryRoute from "./features/country/countryRoute";
+import imageRoute from "./features/image/imageRoute";
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
+// Serve static files
+const pathToImages = path.resolve(__dirname, "../public/images");
+app.use("/images", express.static(pathToImages));
+
 // Use routes
 app.use("/kategorije", kategorijeRoute);
 app.use("/item", itemRoute);
 app.use("/tag", tagRoute);
 app.use("/country", countryRoute);
+app.use("/image", imageRoute);
 
 // Test route
 app.get("/health", (req: Request, res: Response) => {

@@ -14,3 +14,5 @@ npm-debug.log
 wc-*.csv
 
 parsedItems.json
+
+public/images/*

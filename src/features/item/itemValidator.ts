@@ -25,7 +25,7 @@ export const itemSchema = z.object({
 
 // The extended fields are the ones that have a default value
 export const itemSchemaCreate = itemSchema.omit({ id: true }).extend({
-  images: z.array(z.string().url()).optional(),
+  images: z.array(z.string()).optional(),
 });
 
 export type Item = z.infer<typeof itemSchema>;
