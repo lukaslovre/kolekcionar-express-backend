@@ -2,10 +2,12 @@ import { Item } from "@prisma/client";
 import { z } from "zod";
 import type { NextFunction, Request, Response } from "express";
 
+// SETUP AND DECLARE CONSTANTS
+
 export type AllowedFieldsKeys = keyof Item | "tags";
 type AllowedFieldsValues = "string" | "number" | "string[]" | "NOT_ALLOWED";
 
-export const allowedFields: Record<AllowedFieldsKeys, AllowedFieldsValues> = {
+export const allFields: Record<AllowedFieldsKeys, AllowedFieldsValues> = {
   id: "NOT_ALLOWED",
   cijena: "number",
   limit: "number",
@@ -27,15 +29,21 @@ export const allowedFields: Record<AllowedFieldsKeys, AllowedFieldsValues> = {
   duljina: "number",
 };
 
-const allKeys = Object.keys(allowedFields);
+const allKeys = Object.keys(allFields);
 
-const allowedKeys = Object.keys(allowedFields).filter(
-  (key) => allowedFields[key as AllowedFieldsKeys] !== "NOT_ALLOWED"
+const allowedKeys = Object.keys(allFields).filter(
+  (key) => allFields[key as AllowedFieldsKeys] !== "NOT_ALLOWED"
 );
 
 const itemQuerySchema = z.object({
-  max: z.string().default("4"), // TODO: handle negative numbers and add top limit
-  offset: z.string().default("0"),
+  // Pagination
+  max: z.preprocess(
+    (val) => parseInt(String(val)) || 3,
+    z.number().min(1).max(100).default(4)
+  ),
+  offset: z.preprocess((val) => parseInt(String(val)) || 0, z.number().min(0).default(0)),
+
+  // Sort
   sort: z.enum(["asc", "desc"]).default("desc"),
   sortBy: z.enum(allKeys as [string, ...string[]]).default("vrijemeDodavanja"),
 
@@ -47,7 +55,7 @@ const itemQuerySchema = z.object({
 export function handleQueryObject(query: Request["query"]) {
   console.log("Raw query params", query);
 
-  // Step 1: Remove empty fields
+  //   Step 1: Remove empty fields
   const cleanQuery = Object.fromEntries(
     Object.entries(query).filter(([key, value]) => value)
   );
@@ -59,31 +67,10 @@ export function handleQueryObject(query: Request["query"]) {
 
   console.log("Parsed query params", parsedQuery);
 
-  // Step 3: Transform query fields to correct types
-  // (if field is number, we should expect the following form to allow setting number ranges: field=1-10, field=1-, field=-10, field=1)
-
-  const transformedQuery = {
-    ...parsedQuery,
-
-    max: isNaN(parseInt(parsedQuery.max)) ? 4 : parseInt(parsedQuery.max),
-    offset: isNaN(parseInt(parsedQuery.offset)) ? 0 : parseInt(parsedQuery.offset),
-    sort: parsedQuery.sort,
-    sortBy: parsedQuery.sortBy,
-  };
-  // TODO: handle negative numbers
-  console.log("Transformed query params", transformedQuery);
-
-  return transformedQuery;
+  return parsedQuery;
 }
 
-function countInString(str: string, char: string): number {
-  let count = 0;
-  for (let i = 0; i < str.length; i++) {
-    if (str[i] === char) count++;
-  }
-  return count;
-}
-
+// WARNING: Ne radi za negativne brojeve, ali mislim da ih u praksi nema
 export function parseNumberRange(value: string) {
   // we should expect the following form to allow setting number ranges:
   // e.g. "1-10", "1-", "-10", "5"
@@ -117,4 +104,12 @@ export function parseNumberRange(value: string) {
     // invalid range, TODO: handle this case
     return {};
   }
+}
+
+function countInString(str: string, char: string): number {
+  let count = 0;
+  for (let i = 0; i < str.length; i++) {
+    if (str[i] === char) count++;
+  }
+  return count;
 }

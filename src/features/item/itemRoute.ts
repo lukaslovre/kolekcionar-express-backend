@@ -5,7 +5,7 @@ import { validateBody } from "../../middleware/validateMiddleware";
 import { itemSchemaCreate } from "./itemValidator";
 import { getAllCategoryDescendants } from "../kategorije/utils/sqlCategoryTreeUtils";
 import {
-  allowedFields,
+  allFields,
   AllowedFieldsKeys,
   handleQueryObject,
   parseNumberRange,
@@ -69,11 +69,6 @@ router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
 // What query parameters should be available for this route? It should support pagination (max, offset), filtering (by all fields), sorting (by all fields)
 // GET: /underCategory/:categoryId?max=10&offset=0&sort=desc&sortBy=vrijemeDodavanja&search=nekiTekst&
 
-// rough:
-// - take in query
-// - remove all empty and non-whitelisted fields
-// - transform query fields to correct types
-
 router.get(
   "/underCategory/:categoryId",
   async (req: Request, res: Response, next: NextFunction) => {
@@ -90,7 +85,7 @@ router.get(
         where: {
           kategorijaId: { in: categoryIds },
           AND: Object.entries(filterFields).map(([key, value]) => {
-            if (allowedFields[key as AllowedFieldsKeys] === "number") {
+            if (allFields[key as AllowedFieldsKeys] === "number") {
               return {
                 [key]: parseNumberRange(value as string),
               };
