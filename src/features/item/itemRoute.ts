@@ -9,7 +9,7 @@ import {
   AllowedFieldsKeys,
   handleQueryObject,
   parseNumberRange,
-} from "./itemutils";
+} from "./itemUtils";
 
 const router = express.Router();
 
@@ -92,7 +92,8 @@ router.get(
             } else {
               return {
                 [key]: {
-                  equals: value,
+                  // equals: value,
+                  contains: value,
                 },
               };
             }
