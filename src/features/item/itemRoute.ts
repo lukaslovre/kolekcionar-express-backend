@@ -10,6 +10,7 @@ import {
   handleQueryObject,
   parseNumberRange,
 } from "./itemUtils";
+import { Prisma } from "@prisma/client";
 
 const router = express.Router();
 
@@ -84,20 +85,42 @@ router.get(
       const items = await prisma.item.findMany({
         where: {
           kategorijaId: { in: categoryIds },
-          AND: Object.entries(filterFields).map(([key, value]) => {
-            if (allFields[key as AllowedFieldsKeys] === "number") {
-              return {
-                [key]: parseNumberRange(value as string),
-              };
-            } else {
-              return {
-                [key]: {
-                  // equals: value,
-                  contains: value,
+
+          AND: Object.entries(filterFields).flatMap<Prisma.ItemWhereInput>(
+            ([key, value]) => {
+              // Number fields
+              if (allFields[key as AllowedFieldsKeys] === "number") {
+                return [
+                  {
+                    [key]: parseNumberRange(value as string),
+                  },
+                ];
+              }
+
+              // String[] fields
+              if (allFields[key as AllowedFieldsKeys] === "string[]") {
+                // Currently only 'tags' field is string[]
+                // Multiple conditions, one for each tag
+                // => item must contain ALL tags in the split array
+                const tagIds = (value as string).split(",").map((v) => v.trim());
+                return tagIds.map((tagId) => ({
+                  [key]: {
+                    some: { id: tagId },
+                  },
+                }));
+              }
+
+              // Other fields
+              return [
+                {
+                  [key]: {
+                    equals: value,
+                    // contains: value,
+                  },
                 },
-              };
+              ];
             }
-          }),
+          ),
         },
         include: {
           tags: true,

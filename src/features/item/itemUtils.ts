@@ -38,8 +38,8 @@ const allowedKeys = Object.keys(allFields).filter(
 const itemQuerySchema = z.object({
   // Pagination
   max: z.preprocess(
-    (val) => parseInt(String(val)) || 3,
-    z.number().min(1).max(100).default(4)
+    (val) => parseInt(String(val)) || 5,
+    z.number().min(1).max(100).default(5)
   ),
   offset: z.preprocess((val) => parseInt(String(val)) || 0, z.number().min(0).default(0)),
 
